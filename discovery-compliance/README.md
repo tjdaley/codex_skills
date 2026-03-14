@@ -1,5 +1,7 @@
 ﻿# Discovery Statement Compliance Codex Skill
 
+![Discovery Compliance Banner](https://github.com/tjdaley/codex_skills/blob/main/discovery-compliance/GUMROAD%20Discovery%20Compliance%20(1).png)
+
 Created by *Thomas J. Daley*.
 
 ## What This Skill Does
