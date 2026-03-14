@@ -34,32 +34,6 @@ After cleanup, the skill creates:
 - `credit_card_compliance_matrices.md`
 - `compliance_matrices.xlsx`
 
-## Install The Skill
-
-### Option 1: Copy The Skill Folder Into Codex
-
-Copy the `discovery-compliance` folder into your local Codex skills directory.
-
-Typical location on Windows:
-
-```text
-%USERPROFILE%\.codex\skills\discovery-compliance
-```
-
-### Option 2: Install From This Repository
-
-If your Codex setup supports skill installation from a repo, install the `discovery-compliance` folder from this repository into your local Codex skills directory.
-
-If you are unsure which method to use, use Option 1.
-
-## Skill Location
-
-The skill lives here in this repository:
-
-```text
-discovery-compliance/
-```
-
 ## Requirements
 
 This skill is intended for Windows and uses PowerShell for OCR fallback.
@@ -72,7 +46,19 @@ python -m pip install pypdf openpyxl pymupdf pillow
 
 ## How To Run It
 
-Use the wrapper script:
+### Getting Started
+
+Before you start using the skill, copy the credit card and bank statement folders to your local computer. The skill will not access a shared drive, for safety reasons. After the skill runs and you have your spreadsheets, you can delete the credit card and bank statement folders from your computer.
+
+### From Codex
+
+If you have installed the skill into Codex, you can use this prompt to start the process:
+
+```text
+Use $discovery-compliance to extract statement metadata and build compliance matrices for discovery productions.
+```
+
+### Using the wrapper script:
 
 ```powershell
 python <skill-dir>\scripts\run_matter.py ...
