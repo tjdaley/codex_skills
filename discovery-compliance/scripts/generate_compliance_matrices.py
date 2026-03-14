@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import argparse
 import csv
@@ -34,6 +34,7 @@ class Statement:
     begin: date | None
     end: date | None
     bates: str
+    account_holder: str | None = None
 
 
 def parse_args() -> argparse.Namespace:
@@ -91,6 +92,7 @@ def read_statements(csv_path: Path, kind: str) -> list[Statement]:
                 begin=parse_date(row['Beginning Date of the Statement']) if row['Beginning Date of the Statement'] else None,
                 end=parse_date(row['Ending Date of the Statement']) if row['Ending Date of the Statement'] else None,
                 bates=row['Bates Number'].strip(),
+                account_holder=row['Account Holder(s) Name(s)'].strip() if row['Account Holder(s) Name(s)'].strip() else None
             )
         )
     return statements
