@@ -23,6 +23,8 @@ The skill is designed so a paralegal can supply:
 - the Bates-number regular expression for the matter
 - the year range for the compliance matrices
 
+![Processing Steps](https://github.com/tjdaley/codex_skills/blob/main/discovery-compliance/_GUMROAD%20Discovery%20Compliance%20-%20Flowchart%20(Zoom%20Virtual%20Background).png)
+
 ## What It Produces
 
 During extraction, the skill creates:
@@ -35,6 +37,8 @@ After cleanup, the skill creates:
 - `bank_compliance_matrices.md`
 - `credit_card_compliance_matrices.md`
 - `compliance_matrices.xlsx`
+
+![Sample Output]()
 
 ## Requirements
 
