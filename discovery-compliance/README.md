@@ -55,7 +55,9 @@ python -m pip install pypdf openpyxl pymupdf pillow
 1. Open Codex
 2. Enter this prompt:
 
-```Use $skill-installer to install the skill from https://github.com/tjdaley/codex_skills/tree/main/discovery-compliance```
+```text
+Use $skill-installer to install the skill from https://github.com/tjdaley/codex_skills/tree/main/discovery-compliance
+```
 
 ## How To Run It
 
