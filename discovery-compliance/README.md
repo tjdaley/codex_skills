@@ -38,7 +38,7 @@ After cleanup, the skill creates:
 - `credit_card_compliance_matrices.md`
 - `compliance_matrices.xlsx`
 
-![Sample Output]()
+![Sample Output](https://github.com/tjdaley/codex_skills/blob/main/discovery-compliance/GUMROAD%20Discovery%20Compliance%20-%20Sample%20Output.png)
 
 ## Requirements
 
