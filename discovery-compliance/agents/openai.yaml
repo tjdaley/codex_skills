@@ -1,0 +1,4 @@
+interface:
+  display_name: "Discovery Compliance"
+  short_description: "Extract statements and build compliance matrices"
+  default_prompt: "Use $discovery-compliance to extract statement metadata and build compliance matrices for discovery productions."
