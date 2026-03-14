@@ -1,6 +1,6 @@
 ﻿# Shared Codex Skills
 
-![static badge](https://img.shields.io/badge/Created-by-Tom-Daley-green) ![static badge](https://img.shields.io/badge/AI-blue) ![static badge](https://img.shields.io/badge/Phase-Beta-yellow) 
+![static badge](https://img.shields.io/badge/Author-TJDALEY-green) ![static badge](https://img.shields.io/badge/AI-blue) ![static badge](https://img.shields.io/badge/Phase-Beta-yellow) 
 
 This repository contains reusable Codex skills for recurring legal-support workflows.
 
