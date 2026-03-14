@@ -2,37 +2,20 @@
 
 This repository contains reusable Codex skills for recurring legal-support workflows.
 
-## What This Skill Does
+## Prerequisites
 
-`discovery-compliance` helps process statement productions for discovery review.
+You must have the following apps installed on your computer:
 
-It supports two document types:
-- bank account statements
-- credit card statements
+* [Codex](https://developers.openai.com/codex/app/)
+* Git for [Windows](https://github.com/git-for-windows/git/releases/download/v2.53.0.windows.2/Git-2.53.0.2-64-bit.exe) [Mac](https://git-scm.com/install/mac)
+* Python [Windows](https://www.python.org/ftp/python/3.13.12/python-3.13.12-amd64.exe) [Mac](https://www.python.org/downloads/release/python-3143/)
 
-It performs the workflow in two phases:
-1. Extract statement metadata into reviewable Excel and CSV files.
-2. After human cleanup, generate compliance matrices in Markdown and Excel.
+_**NOTE**_: Your Mac may already have Python installed but it might not be up to date. You need Python version 3.12 or later. You can determine your Python version by opening a terminal window and typing this command:
 
-The skill is designed so a paralegal can supply:
-- the bank statement folder
-- the credit card statement folder
-- the output folder
-- the Bates-number regular expression for the matter
-- the year range for the compliance matrices
-
-## What It Produces
-
-During extraction, the skill creates:
-- `bank_statement_index.csv`
-- `bank_statement_index.xlsx`
-- `credit_card_statement_index.csv`
-- `credit_card_statement_index.xlsx`
-
-After cleanup, the skill creates:
-- `bank_compliance_matrices.md`
-- `credit_card_compliance_matrices.md`
-- `compliance_matrices.xlsx`
+```text
+$ python --version
+$ python3 --version
+```
 
 ## Install The Skill
 
