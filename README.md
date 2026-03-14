@@ -31,3 +31,4 @@ If the wrapper script reports missing Python packages, install the dependencies 
 
 ## Author
 
+**Built with ❤️ by [Thomas J. Daley](https://tjd.txfamlaw.com) [Blog](https://thomasjdaley.com).**
