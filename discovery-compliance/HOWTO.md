@@ -1,3 +1,5 @@
+![Thomas J. Daley - Automation for Law Firms]()
+
 # Discovery Compliance - Codex Skill
 
 *This is a skill that you can install in your Codex app*
