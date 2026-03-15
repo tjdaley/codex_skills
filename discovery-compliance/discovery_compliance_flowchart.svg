@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 620" width="680" height="620">
+<style>
+  text { font-family: -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif; }
+  .th { font-size: 14px; font-weight: 600; }
+  .ts { font-size: 12px; font-weight: 400; }
+  .arr { fill: none; stroke: #C4C2BA; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .c-blue > rect  { fill: #E6F1FB; stroke: #185FA5; stroke-width: 0.5; }
+  .c-blue > .th   { fill: #0C447C; }
+  .c-blue > .ts   { fill: #185FA5; }
+  .c-teal > rect  { fill: #E1F5EE; stroke: #0F6E56; stroke-width: 0.5; }
+  .c-teal > .th   { fill: #085041; }
+  .c-teal > .ts   { fill: #0F6E56; }
+  .c-amber > rect { fill: #FAEEDA; stroke: #854F0B; stroke-width: 0.5; }
+  .c-amber > .th  { fill: #633806; }
+  .c-amber > .ts  { fill: #854F0B; }
+  .c-coral > rect { fill: #FAECE7; stroke: #993C1D; stroke-width: 0.5; }
+  .c-coral > .th  { fill: #712B13; }
+  .c-coral > .ts  { fill: #993C1D; }
+  .c-purple > rect { fill: #EEEDFE; stroke: #534AB7; stroke-width: 0.5; }
+  .c-purple > .th  { fill: #3C3489; }
+  .c-purple > .ts  { fill: #534AB7; }
+</style>
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+    <path d="M2 1L8 5L2 9" fill="none" stroke="#C4C2BA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </marker>
+</defs>
+
+<!-- ── INPUT ROW ── -->
+<g class="c-blue">
+  <rect x="60" y="40" width="240" height="52" rx="8"/>
+  <text class="th" x="180" y="56" text-anchor="middle" dominant-baseline="central">Bank statements</text>
+  <text class="ts" x="180" y="76" text-anchor="middle" dominant-baseline="central">Folder of PDFs</text>
+</g>
+<g class="c-blue">
+  <rect x="380" y="40" width="240" height="52" rx="8"/>
+  <text class="th" x="500" y="56" text-anchor="middle" dominant-baseline="central">Credit card statements</text>
+  <text class="ts" x="500" y="76" text-anchor="middle" dominant-baseline="central">Folder of PDFs</text>
+</g>
+
+<!-- Convergence to center -->
+<path d="M180,92 L180,110 L340,110" class="arr"/>
+<path d="M500,92 L500,110 L340,110" class="arr"/>
+<line x1="340" y1="110" x2="340" y2="118" class="arr" marker-end="url(#arrow)"/>
+
+<!-- ── STEP 1: AI PARSES ── -->
+<g class="c-teal">
+  <rect x="190" y="118" width="300" height="56" rx="8"/>
+  <text class="th" x="340" y="136" text-anchor="middle" dominant-baseline="central">AI agent parses statements</text>
+  <text class="ts" x="340" y="156" text-anchor="middle" dominant-baseline="central">Reads &amp; identifies each document</text>
+</g>
+
+<line x1="340" y1="174" x2="340" y2="212" class="arr" marker-end="url(#arrow)"/>
+
+<!-- ── STEP 2: EXTRACTS METADATA ── -->
+<g class="c-teal">
+  <rect x="190" y="212" width="300" height="56" rx="8"/>
+  <text class="th" x="340" y="230" text-anchor="middle" dominant-baseline="central">Extracts statement metadata</text>
+  <text class="ts" x="340" y="250" text-anchor="middle" dominant-baseline="central">Account info, dates, statement periods</text>
+</g>
+
+<line x1="340" y1="268" x2="340" y2="306" class="arr" marker-end="url(#arrow)"/>
+
+<!-- ── STEP 3: CSV DATABASE ── -->
+<g class="c-amber">
+  <rect x="190" y="306" width="300" height="56" rx="8"/>
+  <text class="th" x="340" y="324" text-anchor="middle" dominant-baseline="central">Intermediate CSV database</text>
+  <text class="ts" x="340" y="344" text-anchor="middle" dominant-baseline="central">Review files ready for cleanup</text>
+</g>
+
+<line x1="340" y1="362" x2="340" y2="400" class="arr" marker-end="url(#arrow)"/>
+
+<!-- ── STEP 4: ATTORNEY REVIEW ── -->
+<g class="c-coral">
+  <rect x="190" y="400" width="300" height="60" rx="8"/>
+  <text class="th" x="340" y="420" text-anchor="middle" dominant-baseline="central">Attorney reviews &amp; cleans data</text>
+  <text class="ts" x="340" y="440" text-anchor="middle" dominant-baseline="central">Manual review &amp; data correction</text>
+</g>
+
+<line x1="340" y1="460" x2="340" y2="498" class="arr" marker-end="url(#arrow)"/>
+
+<!-- ── STEP 5: COMPLIANCE MATRICES ── -->
+<g class="c-purple">
+  <rect x="190" y="498" width="300" height="56" rx="8"/>
+  <text class="th" x="340" y="516" text-anchor="middle" dominant-baseline="central">Compliance matrices generated</text>
+  <text class="ts" x="340" y="536" text-anchor="middle" dominant-baseline="central">Produced vs. missing &#x2014; by account</text>
+</g>
+
+<!-- ── LEGEND ── -->
+<g transform="translate(75,578)">
+  <rect x="0" y="0" width="10" height="10" rx="2" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.5"/>
+  <text x="14" y="5" font-family="-apple-system,'Segoe UI',sans-serif" font-size="10" fill="#185FA5" dominant-baseline="central">Input</text>
+  <rect x="76" y="0" width="10" height="10" rx="2" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.5"/>
+  <text x="90" y="5" font-family="-apple-system,'Segoe UI',sans-serif" font-size="10" fill="#0F6E56" dominant-baseline="central">AI processing</text>
+  <rect x="194" y="0" width="10" height="10" rx="2" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.5"/>
+  <text x="208" y="5" font-family="-apple-system,'Segoe UI',sans-serif" font-size="10" fill="#854F0B" dominant-baseline="central">Intermediate data</text>
+  <rect x="328" y="0" width="10" height="10" rx="2" fill="#FAECE7" stroke="#993C1D" stroke-width="0.5"/>
+  <text x="342" y="5" font-family="-apple-system,'Segoe UI',sans-serif" font-size="10" fill="#993C1D" dominant-baseline="central">Human review</text>
+  <rect x="440" y="0" width="10" height="10" rx="2" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.5"/>
+  <text x="454" y="5" font-family="-apple-system,'Segoe UI',sans-serif" font-size="10" fill="#534AB7" dominant-baseline="central">Output</text>
+</g>
+
+</svg>
