@@ -14,7 +14,6 @@ This is a skill that runs inside OpenAI's Codex app.
 
 You can install Codex from this link: [Install Page](https://developers.openai.com/codex/app/)
 
-
 ### Python
 
 Your system must have Python installed. If you have a Mac, you probably already have Python installed. If you have a Windows computer, you may need to install Python.
@@ -85,6 +84,8 @@ DOE, JANE - Divorce
 ```
 
 The folder structure doesn't matter to the skill, but you do want all bank statements in one place, by themselves, and all credit card statements in one place, by themselves.
+
+![Processing Flowchart](https://github.com/tjdaley/codex_skills/blob/main/discovery-compliance/discovery_compliance_flowchart.svg)
 
 **Fourth**: Use the Skill
 
