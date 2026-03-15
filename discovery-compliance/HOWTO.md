@@ -148,6 +148,8 @@ JD | The beginning of the real Bates number is "JD"
 
 **Finally**: The skill will run through the input folders and create the output spreadsheets. It may ask you some questions while it runs, depending on your computer's configuration. Generally, just say "YES" to whatever it asks (if it's a yes or no question). When it's done, you'll get a pop-up message telling you it's done and you'll find the output spreadsheet in the output folder, in this example ```[path to folder]\Codex\DOE, JANE - Divorce\Our Production```.
 
+![Sample Output](https://github.com/tjdaley/codex_skills/blob/main/discovery-compliance/GUMROAD%20Discovery%20Compliance%20-%20Sample%20Output.png)
+
 ## Thank You
 
 Thank you for installing and using this skill. I hope it helps you ananlyze discovery deficiecies quickly and accurately and that you get to spend more time enjoying life than pouring over folders of documents.
