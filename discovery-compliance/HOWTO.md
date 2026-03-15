@@ -1,4 +1,4 @@
-![Thomas J. Daley - Automation for Law Firms]()
+![Thomas J. Daley - Automation for Law Firms](https://github.com/tjdaley/codex_skills/raw/main/discovery-compliance/GUMROAD%20Discovery%20Compliance%20(1).png)
 
 # Discovery Compliance - Codex Skill
 
