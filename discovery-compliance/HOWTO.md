@@ -154,21 +154,11 @@ JD | The beginning of the real Bates number is "JD"
 
 Thank you for installing and using this skill. I hope it helps you ananlyze discovery deficiecies quickly and accurately and that you get to spend more time enjoying life than pouring over folders of documents.
 
----
-
 ## Author
 
-Thomas J. Daley, J.D.
+Thomas J. Daley, J.D. * [Web Site](https://tjd.txfamlaw.com) * [Law Firm](https://koonsfuller.com/attorneys/tom-daley) * [Blog](https://www.thomasjdaley.com) * [Law Firm Automation](https://www.jdbot.us) * [LinkedIn](https://www.linkedin.com/in/tomdaley/)
 
-[Web Site](https://tjd.txfamlaw.com)
-
-[Law Firm](https://koonsfuller.com/attorneys/tom-daley)
-
-[Blog](https://www.thomasjdaley.com)
-
-[Law Firm Automation](https://www.jdbot.us)
-
-[LinkedIn](https://www.linkedin.com/in/tomdaley/)
+---
 
 _Copyright &copy; 2026 by Thomas J. Daley. All Rights Reserved._
 
