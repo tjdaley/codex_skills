@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import argparse
 import csv
@@ -6,6 +6,7 @@ import re
 import subprocess
 import sys
 from dataclasses import dataclass
+from decimal import Decimal, InvalidOperation
 from datetime import date, datetime
 from pathlib import Path
 
@@ -31,6 +32,8 @@ class ParsedFields:
     account_holders: str = ''
     beginning_date: str = ''
     ending_date: str = ''
+    beginning_balance: str = ''
+    ending_balance: str = ''
 
 
 @dataclass
@@ -42,6 +45,8 @@ class Row:
     account_holders: str
     beginning_date: str
     ending_date: str
+    beginning_balance: str
+    ending_balance: str
     bates_number: str
     extraction_method: str
 
@@ -95,6 +100,63 @@ def parse_mmdd(text: str, end_date: date | None) -> date | None:
 
 def fmt_date(value: date | None) -> str:
     return value.isoformat() if value else ''
+
+
+AMOUNT_RE = r'\(?-?(?:\$?\d[\d,]*\.\d{2})\)?(?:\s*(?:CR|DB))?'
+
+
+def normalize_amount(value: str) -> str:
+    text = value.strip().upper().replace('$', '').replace(',', '')
+    negative = False
+    if text.startswith('(') and text.endswith(')'):
+        negative = True
+        text = text[1:-1].strip()
+    if text.endswith('-'):
+        negative = True
+        text = text[:-1].strip()
+    if text.endswith('CR'):
+        negative = True
+        text = text[:-2].strip()
+    if text.endswith('DB'):
+        text = text[:-2].strip()
+    text = re.sub(r'[^0-9.\-]', '', text)
+    if not text:
+        return ''
+    try:
+        amount = Decimal(text)
+    except InvalidOperation:
+        return ''
+    if negative and amount > 0:
+        amount = -amount
+    return f'{amount:.2f}'
+
+
+def amount_from_text(text: str) -> str:
+    match = re.search(AMOUNT_RE, text, re.IGNORECASE)
+    if not match:
+        return ''
+    return normalize_amount(match.group(0))
+
+
+def find_labeled_amount(lines: list[str], labels: list[str]) -> str:
+    normalized_labels = [label.upper() for label in labels]
+    for idx, line in enumerate(lines):
+        upper = line.upper()
+        if not any(label in upper for label in normalized_labels):
+            continue
+        amount = amount_from_text(line)
+        if amount:
+            return amount
+        if idx + 1 < len(lines):
+            amount = amount_from_text(lines[idx + 1])
+            if amount:
+                return amount
+    flat = ' '.join(lines)
+    for label in labels:
+        match = re.search(rf'{re.escape(label)}.{{0,80}}?({AMOUNT_RE})', flat, re.IGNORECASE)
+        if match:
+            return normalize_amount(match.group(1))
+    return ''
 
 
 def looks_like_street(line: str) -> bool:
@@ -220,6 +282,15 @@ def parse_wells_fargo(lines: list[str], pdf_path: Path) -> ParsedFields:
         if parsed_end:
             parsed.ending_date = fmt_date(parsed_end)
 
+    parsed.beginning_balance = find_labeled_amount(
+        lines,
+        ['Beginning balance on', 'Beginning balance', 'Previous balance', 'Opening balance'],
+    )
+    parsed.ending_balance = find_labeled_amount(
+        lines,
+        ['Ending balance on', 'Ending balance', 'Closing balance', 'Current balance'],
+    )
+
     return parsed
 
 
@@ -258,6 +329,15 @@ def parse_capital_one(lines: list[str], pdf_path: Path) -> ParsedFields:
         end_date_obj = datetime.strptime(parsed.ending_date, '%Y-%m-%d').date()
         parsed.beginning_date = date(end_date_obj.year, end_date_obj.month, 1).isoformat()
 
+    parsed.beginning_balance = find_labeled_amount(
+        lines,
+        ['Beginning Balance', 'Previous Balance', 'Opening Balance'],
+    )
+    parsed.ending_balance = find_labeled_amount(
+        lines,
+        ['Ending Balance', 'Closing Balance', 'Current Balance'],
+    )
+
     return parsed
 
 
@@ -276,11 +356,20 @@ def merge_missing(base: ParsedFields, extra: ParsedFields) -> ParsedFields:
         account_holders=base.account_holders or extra.account_holders,
         beginning_date=base.beginning_date or extra.beginning_date,
         ending_date=base.ending_date or extra.ending_date,
+        beginning_balance=base.beginning_balance or extra.beginning_balance,
+        ending_balance=base.ending_balance or extra.ending_balance,
     )
 
 
 def needs_second_page(parsed: ParsedFields) -> bool:
-    return not all([parsed.account_number, parsed.account_holders, parsed.beginning_date, parsed.ending_date])
+    return not all([
+        parsed.account_number,
+        parsed.account_holders,
+        parsed.beginning_date,
+        parsed.ending_date,
+        parsed.beginning_balance,
+        parsed.ending_balance,
+    ])
 
 
 def write_outputs(rows: list[Row], csv_path: Path, xlsx_path: Path) -> None:
@@ -291,7 +380,8 @@ def write_outputs(rows: list[Row], csv_path: Path, xlsx_path: Path) -> None:
     ws.title = 'Bank Statements'
     headers = [
         'File Path', 'Filename Examined', 'Bank Name', 'Account Number', 'Account Holder(s) Name(s)',
-        'Beginning Date of the Statement', 'Ending Date of the Statement', 'Bates Number', 'Extraction Method',
+        'Beginning Date of the Statement', 'Ending Date of the Statement', 'Beginning Balance', 'Ending Balance',
+        'Bates Number', 'Extraction Method',
     ]
     ws.append(headers)
     for cell in ws[1]:
@@ -299,9 +389,10 @@ def write_outputs(rows: list[Row], csv_path: Path, xlsx_path: Path) -> None:
     for row in rows:
         ws.append([
             row.file_path, row.filename_examined, row.bank_name, row.account_number, row.account_holders,
-            row.beginning_date, row.ending_date, row.bates_number, row.extraction_method,
+            row.beginning_date, row.ending_date, row.beginning_balance, row.ending_balance,
+            row.bates_number, row.extraction_method,
         ])
-    widths = [78, 42, 20, 22, 34, 24, 24, 18, 18]
+    widths = [78, 42, 20, 22, 34, 24, 24, 18, 18, 18, 18]
     for idx, width in enumerate(widths, start=1):
         ws.column_dimensions[chr(64 + idx)].width = width
     wb.save(xlsx_path)
@@ -312,7 +403,8 @@ def write_outputs(rows: list[Row], csv_path: Path, xlsx_path: Path) -> None:
         for row in rows:
             writer.writerow([
                 row.file_path, row.filename_examined, row.bank_name, row.account_number, row.account_holders,
-                row.beginning_date, row.ending_date, row.bates_number, row.extraction_method,
+                row.beginning_date, row.ending_date, row.beginning_balance, row.ending_balance,
+                row.bates_number, row.extraction_method,
             ])
 
 
@@ -349,6 +441,8 @@ def main() -> int:
                 account_holders=parsed.account_holders,
                 beginning_date=parsed.beginning_date,
                 ending_date=parsed.ending_date,
+                beginning_balance=parsed.beginning_balance,
+                ending_balance=parsed.ending_balance,
                 bates_number=find_bates(combined_text, pdf_path, bates_re),
                 extraction_method='+'.join(sorted(methods)),
             )
