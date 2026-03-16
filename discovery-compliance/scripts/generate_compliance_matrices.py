@@ -62,17 +62,16 @@ def month_iter(begin: date, end: date):
             month += 1
 
 
-def bank_label(folder: str) -> str:
-    parts = [part.strip() for part in folder.split(' - ') if part.strip()]
-    if parts:
-        tail = parts[-1]
-        if 'x' in tail.lower():
-            return tail
-    return folder
-
-
-def credit_label(folder: str) -> str:
-    return folder
+def build_account_label(name: str, account_number: str, fallback: str) -> str:
+    clean_name = name.strip()
+    clean_account = account_number.strip()
+    if clean_name and clean_account:
+        return f'{clean_name} x{clean_account}'
+    if clean_name:
+        return clean_name
+    if clean_account:
+        return f'x{clean_account}'
+    return fallback
 
 
 def read_statements(csv_path: Path, kind: str) -> list[Statement]:
@@ -82,7 +81,10 @@ def read_statements(csv_path: Path, kind: str) -> list[Statement]:
     statements: list[Statement] = []
     for row in rows:
         folder = Path(row['File Path']).parent.name
-        label = bank_label(folder) if kind == 'bank' else credit_label(folder)
+        if kind == 'bank':
+            label = build_account_label(row['Bank Name'], row['Account Number'], row['Filename Examined'])
+        else:
+            label = build_account_label(row['Credit Card Issuer'], row['Account Number'], row['Filename Examined'])
         statements.append(
             Statement(
                 folder=folder,
