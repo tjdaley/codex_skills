@@ -19,6 +19,10 @@ collin-county-court-monitor-skill-repo/
 
 Point the Codex skill installer at the `collin-county-court-monitor` folder in this repository.
 
+```text
+Use $skill-installer to install the skill from https://github.com/tjdaley/codex_skills/tree/main/discovery-compliance
+```
+
 ## What The Skill Does
 
 - scrape flagged Collin County cause numbers from an Excel-friendly case-list CSV
