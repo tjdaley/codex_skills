@@ -1,0 +1,4 @@
+interface:
+  display_name: "Collin Court Monitor"
+  short_description: "Scrape Collin County cases and report new events"
+  default_prompt: "Use $collin-county-court-monitor to scrape flagged Collin County cause numbers from a CSV file, generate a new-events report, and prepare Outlook drafts for the attorneys."
