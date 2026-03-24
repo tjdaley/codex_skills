@@ -30,6 +30,12 @@ def parse_args() -> argparse.Namespace:
         default="none",
     )
     parser.add_argument(
+        "--event-date-after",
+        help=(
+            "Include only rows whose event_date is after this date in YYYY-MM-DD format."
+        ),
+    )
+    parser.add_argument(
         "--email-to",
         help=(
             "Optional override recipient list, comma separated. If omitted, the workflow reads "
@@ -69,6 +75,8 @@ def main() -> int:
     ]
     if args.report_date:
         report_args.extend(["--report-date", args.report_date])
+    if args.event_date_after:
+        report_args.extend(["--event-date-after", args.event_date_after])
 
     run_command(scraper_args)
     run_command(report_args)
