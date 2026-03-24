@@ -9,6 +9,7 @@ import time
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
@@ -190,15 +191,7 @@ def event_identity(row: dict[str, str]) -> tuple[str, ...]:
 
 
 def existing_event_keys(csv_path: Path) -> set[tuple[str, ...]]:
-    if not csv_path.exists():
-        return set()
-
-    keys: set[tuple[str, ...]] = set()
-    with csv_path.open("r", newline="", encoding="utf-8-sig") as handle:
-        reader = csv.DictReader(handle)
-        for row in reader:
-            keys.add(event_identity({field: row.get(field, "") or "" for field in CSV_FIELDNAMES}))
-    return keys
+    return {event_identity(row) for row in read_csv_rows(csv_path)}
 
 
 def read_csv_rows(csv_path: Path) -> list[dict[str, str]]:
@@ -207,13 +200,27 @@ def read_csv_rows(csv_path: Path) -> list[dict[str, str]]:
 
     with csv_path.open("r", newline="", encoding="utf-8-sig") as handle:
         reader = csv.DictReader(handle)
+        fieldnames = reader.fieldnames or []
         rows: list[dict[str, str]] = []
-        for row in reader:
-            normalized_row = {field: row.get(field, "") or "" for field in CSV_FIELDNAMES}
+        if set(CSV_FIELDNAMES).issubset(set(fieldnames)):
+            for row in reader:
+                normalized_row = {field: row.get(field, "") or "" for field in CSV_FIELDNAMES}
+                if not normalized_row["scraped_date"] and normalized_row["scraped_on_utc"]:
+                    normalized_row["scraped_date"] = normalized_row["scraped_on_utc"][:10]
+                rows.append(normalized_row)
+            return rows
+
+    with csv_path.open("r", newline="", encoding="utf-8-sig") as handle:
+        plain_reader = csv.reader(handle)
+        for record in plain_reader:
+            if not record:
+                continue
+            padded = record[: len(CSV_FIELDNAMES)] + [""] * max(0, len(CSV_FIELDNAMES) - len(record))
+            normalized_row = dict(zip(CSV_FIELDNAMES, padded))
             if not normalized_row["scraped_date"] and normalized_row["scraped_on_utc"]:
                 normalized_row["scraped_date"] = normalized_row["scraped_on_utc"][:10]
             rows.append(normalized_row)
-        return rows
+    return rows
 
 
 def rewrite_csv(csv_path: Path, rows: list[dict[str, str]]) -> None:
@@ -225,9 +232,10 @@ def rewrite_csv(csv_path: Path, rows: list[dict[str, str]]) -> None:
 
 def append_new_events(csv_path: Path, rows: list[dict[str, str]]) -> tuple[int, int]:
     csv_path.parent.mkdir(parents=True, exist_ok=True)
+    file_exists = csv_path.exists()
     existing_rows = read_csv_rows(csv_path)
     existing_keys = {event_identity(row) for row in existing_rows}
-    if csv_path.exists():
+    if file_exists:
         rewrite_csv(csv_path, existing_rows)
     new_rows: list[dict[str, str]] = []
 
@@ -241,10 +249,10 @@ def append_new_events(csv_path: Path, rows: list[dict[str, str]]) -> tuple[int, 
     if new_rows:
         with csv_path.open("a", newline="", encoding="utf-8-sig") as handle:
             writer = csv.DictWriter(handle, fieldnames=CSV_FIELDNAMES)
-            if not existing_rows and not csv_path.exists():
+            if not file_exists:
                 writer.writeheader()
             writer.writerows(new_rows)
-    elif not csv_path.exists():
+    elif not file_exists:
         rewrite_csv(csv_path, [])
 
     return len(new_rows), len(rows)
