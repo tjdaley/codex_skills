@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 import csv
 from collections import defaultdict
-from datetime import date
+from datetime import date, datetime
 from html import escape
 from pathlib import Path
 import re
@@ -52,6 +52,13 @@ def parse_args() -> argparse.Namespace:
         default=Path("court_scraper_reports"),
         help="Directory where the report files will be written.",
     )
+    parser.add_argument(
+        "--event-date-after",
+        help=(
+            "Include only rows whose event_date is after this date. "
+            "Use YYYY-MM-DD format."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -60,8 +67,19 @@ def load_rows(input_dir: Path) -> list[dict[str, str]]:
     for csv_path in sorted(input_dir.glob("*.csv")):
         with csv_path.open("r", newline="", encoding="utf-8-sig") as handle:
             reader = csv.DictReader(handle)
-            for row in reader:
-                rows.append({key: (value or "").strip() for key, value in row.items()})
+            fieldnames = reader.fieldnames or []
+            if set(REPORT_FIELDNAMES).issubset(set(fieldnames)):
+                for row in reader:
+                    rows.append({key: (value or "").strip() for key, value in row.items()})
+                continue
+
+        with csv_path.open("r", newline="", encoding="utf-8-sig") as handle:
+            plain_reader = csv.reader(handle)
+            for record in plain_reader:
+                if not record:
+                    continue
+                padded = record[: len(REPORT_FIELDNAMES)] + [""] * max(0, len(REPORT_FIELDNAMES) - len(record))
+                rows.append(dict(zip(REPORT_FIELDNAMES, (value.strip() for value in padded))))
     return rows
 
 
@@ -74,6 +92,38 @@ def resolve_report_date(rows: list[dict[str, str]], requested_date: str | None) 
     if not scraped_dates:
         raise ValueError("No scraped_date values were found in the CSV files.")
     return scraped_dates[-1]
+
+
+def parse_event_date(value: str) -> date | None:
+    cleaned = (value or "").strip()
+    if not cleaned:
+        return None
+
+    for fmt in ("%m/%d/%Y", "%m/%d/%y"):
+        try:
+            return datetime.strptime(cleaned, fmt).date()
+        except ValueError:
+            continue
+    try:
+        return date.fromisoformat(cleaned)
+    except ValueError:
+        return None
+
+
+def filter_rows_by_event_cutoff(
+    rows: list[dict[str, str]],
+    event_date_after: str | None,
+) -> list[dict[str, str]]:
+    if not event_date_after:
+        return rows
+
+    cutoff = date.fromisoformat(event_date_after)
+    filtered_rows: list[dict[str, str]] = []
+    for row in rows:
+        event_date = parse_event_date(row.get("event_date", ""))
+        if event_date and event_date > cutoff:
+            filtered_rows.append(row)
+    return filtered_rows
 
 
 def sort_rows(rows: list[dict[str, str]]) -> list[dict[str, str]]:
@@ -234,8 +284,12 @@ def main() -> int:
 
     report_date = resolve_report_date(rows, args.report_date)
     filtered_rows = [row for row in rows if row.get("scraped_date", "") == report_date]
+    filtered_rows = filter_rows_by_event_cutoff(filtered_rows, args.event_date_after)
     if not filtered_rows:
-        raise SystemExit(f"No events were found for scraped_date={report_date}.")
+        cutoff_suffix = (
+            f" and event_date>{args.event_date_after}" if args.event_date_after else ""
+        )
+        raise SystemExit(f"No events were found for scraped_date={report_date}{cutoff_suffix}.")
 
     filtered_rows = sort_rows(filtered_rows)
 
