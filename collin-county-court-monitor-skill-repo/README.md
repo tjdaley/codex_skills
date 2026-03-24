@@ -20,7 +20,7 @@ collin-county-court-monitor-skill-repo/
 Point the Codex skill installer at the `collin-county-court-monitor` folder in this repository.
 
 ```text
-Use $skill-installer to install the skill from https://github.com/tjdaley/codex_skills/tree/main/collin-county-court-monitor-skill-repo
+Use $skill-installer to install the skill from https://github.com/tjdaley/codex_skills/tree/main/collin-county-court-monitor-skill-repo/collin-county-court-monitor
 ```
 
 ## What The Skill Does
